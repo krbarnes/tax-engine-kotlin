@@ -7,12 +7,7 @@ import java.math.BigDecimal
 
 class TaxEngineTests {
 
-    private fun assertTaxRate(taxes: Taxes, rate: TaxRate, amount: String) {
-        val actual = taxes.collectedTaxes[rate.key]!!
-        val expected = BigDecimal(amount)
 
-        assertEquals(0, expected.compareTo(actual))
-    }
 
     @Test
     fun `basic taxes`() {

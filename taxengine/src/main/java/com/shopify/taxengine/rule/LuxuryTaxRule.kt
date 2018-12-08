@@ -27,7 +27,7 @@ data class LuxuryTaxRule(val exemptItems: Set<String>) : TaxRule {
 
     override fun appliesTo(lineItem: TaxableItem, location: Location, tax: TaxRate): Boolean {
         if (location.countryCode != "US") { return false }
-        if (tax.zone == TaxRate.Zone.PROVINCE) { return false }
+        if (tax.zone != TaxRate.Zone.PROVINCE) { return false }
         if (thresholds[location.provinceCode] == null) { return false }
         if (exemptItems.doesNotContain(lineItem.key)) { return false }
         return true
