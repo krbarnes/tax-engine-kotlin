@@ -1,9 +1,6 @@
 package com.shopify.taxengine.rule
 
-import com.shopify.taxengine.Location
-import com.shopify.taxengine.TaxRate
-import com.shopify.taxengine.TaxableItem
-import com.shopify.taxengine.doesNotContain
+import com.shopify.taxengine.*
 import java.math.BigDecimal
 
 data class NewYorkClothingTaxRule(val exemptItems: Set<String>): TaxRule {
@@ -25,19 +22,17 @@ data class NewYorkClothingTaxRule(val exemptItems: Set<String>): TaxRule {
         "CHAUTAUQUA"
     )
 
-    private val threshold: BigDecimal = BigDecimal(100.0)
+    private val threshold: BigDecimal = BigDecimal(110.0)
 
     override fun appliesTo(lineItem: TaxableItem, location: Location, tax: TaxRate): Boolean {
         if (exemptItems.doesNotContain(lineItem.key)) { return false }
         if (location.countryCode != "US") { return false }
         if (location.provinceCode != "NY") { return false }
-        if (tax.zone != TaxRate.Zone.PROVINCE || (tax.zone == TaxRate.Zone.COUNTY && isCountyExempt(location))) { return false }
-        return true
+        if (tax.zone == TaxRate.Zone.PROVINCE || (tax.zone == TaxRate.Zone.COUNTY && isCountyExempt(location))) { return true }
+        return false
     }
 
     private fun isCountyExempt(location: Location): Boolean {
-        // this is some kind of bullshit.
-        // thanks Obama.
         if (exemptCounties.contains(location.county)) {
             return true
         }
@@ -49,5 +44,14 @@ data class NewYorkClothingTaxRule(val exemptItems: Set<String>): TaxRule {
         }
         return false
     }
+
+
+    override fun taxableAmountFor(lineItem: TaxableItem, location: Location, tax: TaxRate): BigDecimal {
+        if (lineItem.taxableAmount.lessThan(lineItem.quantity.multiply(threshold))) {
+            return BigDecimal.ZERO
+        }
+        return lineItem.taxableAmount
+    }
+
 }
 

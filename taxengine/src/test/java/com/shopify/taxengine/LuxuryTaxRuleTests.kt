@@ -47,5 +47,5 @@ class LuxuryTaxRuleTests {
         ))
         assertTaxRate(taxes = taxes, rate = taxRate, amount = "20")
     }
-    
+
 }
