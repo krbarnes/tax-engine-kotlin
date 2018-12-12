@@ -1,5 +1,6 @@
 package com.shopify.taxengine
 
+import junit.framework.Assert.failNotEquals
 import org.junit.Assert
 import java.math.BigDecimal
 
@@ -40,5 +41,9 @@ fun assertTaxRate(taxes: Taxes, rate: TaxRate, amount: String) {
     val actual = taxes.collectedTaxes[rate.key]!!
     val expected = BigDecimal(amount)
 
-    Assert.assertEquals(0, expected.compareTo(actual))
+    if (expected.compareTo(actual) == 0) {
+        return
+    } else {
+        failNotEquals("Computed taxes are not equal.", expected, actual)
+    }
 }
