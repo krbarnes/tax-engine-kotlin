@@ -8,15 +8,15 @@ import java.math.BigDecimal
 data class DisabledTaxRule(val tax: String, val disabledItems: Set<String>): TaxRule {
     override val key: String = "rule:builtin:disabled"
 
-    override fun appliesTo(lineItem: TaxableItem, location: Location, tax: TaxRate): Boolean {
-        return this.tax == tax.key && disabledItems.contains(lineItem.key)
+    override fun appliesTo(taxableItem: TaxableItem, location: Location, taxRate: TaxRate): Boolean {
+        return this.tax == taxRate.key && disabledItems.contains(taxableItem.key)
     }
 
-    override fun taxableAmountFor(lineItem: TaxableItem, location: Location, tax: TaxRate): BigDecimal {
+    override fun taxableAmountFor(taxableItem: TaxableItem, location: Location, taxRate: TaxRate): BigDecimal {
         return BigDecimal.ZERO
     }
 
-    override fun taxRateFor(lineItem: TaxableItem, location: Location, tax: TaxRate): BigDecimal {
+    override fun taxRateFor(taxableItem: TaxableItem, location: Location, taxRate: TaxRate): BigDecimal {
         return BigDecimal.ZERO
     }
 }

@@ -15,21 +15,21 @@ data class LuxuryTaxRule(val exemptItems: Set<String>) : TaxRule {
         "RI" to BigDecimal(250.0)
     )
 
-    override fun taxableAmountFor(lineItem: TaxableItem, location: Location, tax: TaxRate): BigDecimal {
+    override fun taxableAmountFor(taxableItem: TaxableItem, location: Location, taxRate: TaxRate): BigDecimal {
         val threshold = thresholds[location.provinceCode]
         return if (threshold == null) {
-            lineItem.taxableAmount
+            taxableItem.taxableAmount
         } else {
-            val computed = lineItem.taxableAmount - (threshold * lineItem.quantity)
+            val computed = taxableItem.taxableAmount - (threshold * taxableItem.quantity)
             computed.max(BigDecimal.ZERO)
         }
     }
 
-    override fun appliesTo(lineItem: TaxableItem, location: Location, tax: TaxRate): Boolean {
+    override fun appliesTo(taxableItem: TaxableItem, location: Location, taxRate: TaxRate): Boolean {
         if (location.countryCode != "US") { return false }
-        if (tax.zone != TaxRate.Zone.PROVINCE) { return false }
+        if (taxRate.zone != TaxRate.Zone.PROVINCE) { return false }
         if (thresholds[location.provinceCode] == null) { return false }
-        if (exemptItems.doesNotContain(lineItem.key)) { return false }
+        if (exemptItems.doesNotContain(taxableItem.key)) { return false }
         return true
     }
 }

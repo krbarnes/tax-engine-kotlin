@@ -24,11 +24,11 @@ data class NewYorkClothingTaxRule(val exemptItems: Set<String>): TaxRule {
 
     private val threshold: BigDecimal = BigDecimal(110.0)
 
-    override fun appliesTo(lineItem: TaxableItem, location: Location, tax: TaxRate): Boolean {
-        if (exemptItems.doesNotContain(lineItem.key)) { return false }
+    override fun appliesTo(taxableItem: TaxableItem, location: Location, taxRate: TaxRate): Boolean {
+        if (exemptItems.doesNotContain(taxableItem.key)) { return false }
         if (location.countryCode != "US") { return false }
         if (location.provinceCode != "NY") { return false }
-        if (tax.zone == TaxRate.Zone.PROVINCE || (tax.zone == TaxRate.Zone.COUNTY && isCountyExempt(location))) { return true }
+        if (taxRate.zone == TaxRate.Zone.PROVINCE || (taxRate.zone == TaxRate.Zone.COUNTY && isCountyExempt(location))) { return true }
         return false
     }
 
@@ -46,11 +46,11 @@ data class NewYorkClothingTaxRule(val exemptItems: Set<String>): TaxRule {
     }
 
 
-    override fun taxableAmountFor(lineItem: TaxableItem, location: Location, tax: TaxRate): BigDecimal {
-        if (lineItem.taxableAmount.lessThan(lineItem.quantity.multiply(threshold))) {
+    override fun taxableAmountFor(taxableItem: TaxableItem, location: Location, taxRate: TaxRate): BigDecimal {
+        if (taxableItem.taxableAmount.lessThan(taxableItem.quantity.multiply(threshold))) {
             return BigDecimal.ZERO
         }
-        return lineItem.taxableAmount
+        return taxableItem.taxableAmount
     }
 
 }

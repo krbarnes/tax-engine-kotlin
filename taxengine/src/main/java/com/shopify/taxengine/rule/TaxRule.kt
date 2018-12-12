@@ -8,13 +8,13 @@ import java.math.BigDecimal
 interface TaxRule {
     val key: String
 
-    fun appliesTo(lineItem: TaxableItem, location: Location, tax: TaxRate): Boolean
+    fun appliesTo(taxableItem: TaxableItem, location: Location, taxRate: TaxRate): Boolean
 
-    fun taxableAmountFor(lineItem: TaxableItem, location: Location, tax: TaxRate): BigDecimal {
-        return lineItem.taxableAmount
+    fun taxableAmountFor(taxableItem: TaxableItem, location: Location, taxRate: TaxRate): BigDecimal {
+        return taxableItem.taxableAmount
     }
 
-    fun taxRateFor(lineItem: TaxableItem, location: Location, tax: TaxRate): BigDecimal {
-        return tax.rate
+    fun taxRateFor(taxableItem: TaxableItem, location: Location, taxRate: TaxRate): BigDecimal {
+        return taxRate.rate
     }
 }

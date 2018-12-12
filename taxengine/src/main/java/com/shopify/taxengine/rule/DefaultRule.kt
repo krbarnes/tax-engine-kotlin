@@ -8,7 +8,7 @@ import com.shopify.taxengine.*
 class DefaultRule: TaxRule {
     override val key: String = "rule:builtin:default"
 
-    override fun appliesTo(lineItem: TaxableItem, location: Location, tax: TaxRate): Boolean {
+    override fun appliesTo(taxableItem: TaxableItem, location: Location, taxRate: TaxRate): Boolean {
         return true
     }
 }
