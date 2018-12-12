@@ -18,7 +18,7 @@ data class Taxes(val currency: Currency,
                 fragmentAggregates[taxLine.taxRateKey] = currentVal + taxLine.amount
             }
 
-            var taxLines: List<TaxLine> = fragments.map { TaxLine(item = it.item, tax = it.taxRateKey, amount = it.amount) }
+            var taxLines: List<TaxLine> = fragments.map { TaxLine(itemKey = it.itemKey, taxRateKey = it.taxRateKey, amount = it.amount) }
             fragmentAggregates.keys.forEach { key ->
                 val aggregate = fragmentAggregates[key]!!.setScale(currency.minorUnits, RoundingMode.HALF_UP)
                 taxLines = addressRoundingErrors(taxRateKey = key, currency = currency, aggregate = aggregate, taxLines = taxLines)
@@ -34,7 +34,7 @@ data class Taxes(val currency: Currency,
 
         private fun addressRoundingErrors(taxRateKey: String, currency: Currency, aggregate: BigDecimal, taxLines: List<TaxLine>): List<TaxLine> {
             if (currency.minorUnits <= 0) { return taxLines }
-            val linesForTaxFromLineItem = taxLines.filter { it.tax == taxRateKey }
+            val linesForTaxFromLineItem = taxLines.filter { it.taxRateKey == taxRateKey }
             var difference = aggregate - linesForTaxFromLineItem.fold(BigDecimal.ZERO) {  acc, taxLine ->
                 acc + taxLine.amount.setScale(currency.minorUnits, RoundingMode.HALF_UP)
             }
@@ -123,8 +123,8 @@ data class Taxes(val currency: Currency,
         get() {
             var collected: HashMap<String, BigDecimal> = hashMapOf()
              taxLines.forEach { taxLine ->
-                 val currentVal = collected[taxLine.tax] ?: BigDecimal.ZERO
-                 collected[taxLine.tax] = currentVal + taxLine.amount
+                 val currentVal = collected[taxLine.taxRateKey] ?: BigDecimal.ZERO
+                 collected[taxLine.taxRateKey] = currentVal + taxLine.amount
             }
             return collected
         }
@@ -133,10 +133,10 @@ data class Taxes(val currency: Currency,
         get() {
             var itemized: HashMap<String, List<TaxLine>> = hashMapOf()
             taxLines.forEach { taxLine ->
-                val currentVal = itemized[taxLine.item] ?: listOf()
+                val currentVal = itemized[taxLine.itemKey] ?: listOf()
                 val mutableVal = currentVal.toMutableList()
                 mutableVal.add(taxLine)
-                itemized[taxLine.item] = mutableVal.toList()
+                itemized[taxLine.itemKey] = mutableVal.toList()
             }
             return itemized
         }

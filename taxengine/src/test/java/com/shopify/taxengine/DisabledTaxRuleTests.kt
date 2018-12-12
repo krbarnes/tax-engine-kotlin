@@ -22,8 +22,8 @@ class DisabledTaxRuleTests {
         assertEquals(1, federalTaxExemptItemTaxLines?.size)
 
         val taxLine = taxes.itemizedTaxes["item:1"]!!.first()
-        assertEquals(pst.key, taxLine.tax)
-        assertEquals(federalTaxExemptItem.key, taxLine.item)
+        assertEquals(pst.key, taxLine.taxRateKey)
+        assertEquals(federalTaxExemptItem.key, taxLine.itemKey)
         assertEquals(0, taxLine.amount.compareTo(BigDecimal(8)))
      }
 }

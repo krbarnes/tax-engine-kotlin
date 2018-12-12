@@ -2,8 +2,9 @@ package com.shopify.taxengine
 
 import java.math.BigDecimal
 
-data class TaxLine(val item: String,
-                   val tax: String,
-                   var amount: BigDecimal
+data class TaxLine(
+    val itemKey: String,
+    val taxRateKey: String,
+    var amount: BigDecimal
 ) {
 }
