@@ -69,7 +69,7 @@ class TaxEngineTests {
     }
 
     @Test
-    fun `pennies distributed acroll line items correctly`() {
+    fun `pennies distributed across line items correctly`() {
         val taxableItems = (0 until 10).map {
             Sale(key = "custom $it", quantity = 1, unitPrice = "0.46")
         }
