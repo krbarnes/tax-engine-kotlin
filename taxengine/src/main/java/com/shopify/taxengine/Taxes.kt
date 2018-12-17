@@ -141,4 +141,20 @@ data class Taxes(val currency: Currency,
             return itemized
         }
 
+    fun taxLines(taxableItemKey: String): List<TaxLine> {
+        return taxLines.filter { it.itemKey == taxableItemKey }
+    }
+
+    fun amount(taxableItemKey: String, taxRateKey: String): BigDecimal {
+        val itemTaxLines = taxLines(taxableItemKey = taxableItemKey)
+        return itemTaxLines.filter { it.taxRateKey == taxRateKey }.fold(BigDecimal.ZERO) { acc, taxLine ->
+            acc + taxLine.amount
+        }
+    }
+
+    fun amount(taxRateKey: String): BigDecimal {
+        return taxLines.filter { taxRateKey == it.taxRateKey}.fold(BigDecimal.ZERO) { acc, taxLine ->
+            acc + taxLine.amount
+        }
+    }
 }

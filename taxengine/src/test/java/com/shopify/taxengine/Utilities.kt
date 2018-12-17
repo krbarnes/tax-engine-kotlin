@@ -40,7 +40,17 @@ val TOKYO = Location(countryCode = "JP", countryName = "Japan", provinceCode = "
 fun assertTaxRate(taxes: Taxes, rate: TaxRate, amount: String) {
     val actual = taxes.collectedTaxes[rate.key]!!
     val expected = BigDecimal(amount)
+    assertEquals(expected, actual)
+}
 
+fun assertBigDecimalEquals(expected: String, actual: BigDecimal?) {
+    if (actual == null) {
+        failNotEquals("actual value was null", expected, actual)
+    }
+    assertEquals(BigDecimal(expected), actual!!)
+}
+
+fun assertEquals(expected: BigDecimal, actual: BigDecimal) {
     if (expected.compareTo(actual) == 0) {
         return
     } else {
